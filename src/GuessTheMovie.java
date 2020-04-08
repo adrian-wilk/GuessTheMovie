@@ -27,8 +27,16 @@ public class GuessTheMovie {
 
         // randomMovieTitle will generate a random movie basing on reading random line number from movies.txt.
         String randomMovieTitle = Files.readAllLines(Paths.get("movies.txt")).get(randomMovieNumber);
+
+        String hiddenMovieTitle = randomMovieTitle.replaceAll("[a-zA-Z]", "_");
+
         System.out.println(randomMovieTitle);
-        }
+        System.out.println(hiddenMovieTitle);
+
+
+
+
+    }
 
     }
 
