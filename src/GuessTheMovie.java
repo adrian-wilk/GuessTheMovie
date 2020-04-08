@@ -6,39 +6,93 @@ import java.io.File;
 
 public class GuessTheMovie {
 
-    public static void main(String[] args) throws Exception {
+    private boolean isCorrect;
+    private String rightLetters;
+    private String wrongLetters;
+    private int chancesLeft;
+    private String movieToBeGuessed;
 
-        // Guessing the title should end the game. Initial isCorrect value set to false.
-        boolean isCorrect = false;
+    public GuessTheMovie(String args) throws Exception {
 
-        File movieTitle = new File("movies.txt");
-        Scanner movieScanner = new Scanner(movieTitle);
+        isCorrect = false;
+        rightLetters = "";
+        wrongLetters = "";
+        chancesLeft = 10;
+        movieToBeGuessed = RandomMovieTitle.getRandomMovieTitle();
+    }
 
-        // The movies file may be changed and new titles may be added. Therefore let's count how many movies is there before we proceed.
-        int titlesNumber = 0;
+    public String getMovieTitle() {
+        return movieToBeGuessed;
+}
 
-        while (movieScanner.hasNextLine()) {
-            String line = movieScanner.nextLine();
-            titlesNumber += (line.split("\n").length); // "\n" stands for next line which is the divider between movie titles.
+        // Method getHiddenMovieTitle replaces all the letters from the movie title to "_", except the letters guessed correctly.
+        public String getHiddenMovieTitle () {
+            if (rightLetters.equals("")) {
+                return movieToBeGuessed.replaceAll("[a-zA-Z]", "_");
+            } else {
+                return movieToBeGuessed.replaceAll("[a-zA-Z&&[^" + rightLetters + "]]", "_");
+            }
         }
 
-        // Now when the number of movies is known, let's generate a random number from 1 to x, where x is the number of movies.
-        int randomMovieNumber = (int) (Math.random() * titlesNumber);
+        // Method getWrongLetters returns the letters typed in by user, which do not match the movie title letters.
+        public String getWrongLetters(){
+        return wrongLetters;
+        }
 
-        // randomMovieTitle will generate a random movie basing on reading random line number from movies.txt.
-        String randomMovieTitle = Files.readAllLines(Paths.get("movies.txt")).get(randomMovieNumber);
+        // Method Victory returns true if the user guessed the movie title.
+        public boolean Victory(){
+        return isCorrect;
+        }
 
-        String hiddenMovieTitle = randomMovieTitle.replaceAll("[a-zA-Z]", "_");
+        /* Method endOfTheGame verifies if any of two conditions is met: a) user lost all his chances to guess
+        b)user guessed all the movie's letters correctly. In this case the user won the game*/
 
-        System.out.println(randomMovieTitle);
-        System.out.println(hiddenMovieTitle);
+        public boolean endOfTheGame() {
+            if (chancesLeft == 0 ) {
+                return true;
+            }
+            if (!getHiddenMovieTitle().contains("_")){
+                isCorrect = true;
+                return true;
+            }
+            return false;
+        }
 
 
+        /* Method isCorrectLetter checks if the user input is correct and if it is the first time
+        that user typed specific letter.*/
+        private String isCorrectLetter(){
+            System.out.println("Try to guess a letter from the hidden movie title: ");
+            Scanner letterScanner = new Scanner(System.in);
+            String guessedLetter = letterScanner.nextLine();
 
+            // The input must be a lower case letter. Any other input cannot be accepted.
+            if(!guessedLetter.matches("[a-z]")){
+                System.out.println("Only single, lower case letters from english alphabet are accepted. Please try again.");
+                return isCorrectLetter();
+            }
 
-    }
+            if(rightLetters.contains(guessedLetter) || wrongLetters.contains(guessedLetter)){
+                System.out.println("You already tried this. Try a different letter.");
+                return isCorrectLetter();
+            }
+            else{
+                return guessedLetter;
+            }
+        }
 
-    }
+        public void guessALetter(){
+            String letterGuess = isCorrectLetter();
 
+            if (movieToBeGuessed.contains(letterGuess)){
+                System.out.println("Correct! You guessed the letter " + letterGuess + ". Keep it up.");
+                rightLetters += letterGuess;
+            }
+            else{
+                System.out.println("Wrong. There is no letter " + letterGuess + " in the hidden movie title.");
+            chancesLeft--;
+            wrongLetters +=" " + letterGuess;
+            }
 
-
+        }
+        }
