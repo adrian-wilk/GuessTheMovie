@@ -58,6 +58,11 @@ public class GuessTheMovie {
             return false;
         }
 
+        public int getChancesLeft(){
+            return chancesLeft;
+    }
+
+
 
         /* Method isCorrectLetter checks if the user input is correct and if it is the first time
         that user typed specific letter.*/

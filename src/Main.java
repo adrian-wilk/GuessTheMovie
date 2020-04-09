@@ -15,6 +15,7 @@ public class Main {
             System.out.println("The hidden movie title:" + game.getHiddenMovieTitle());
             System.out.println("You guessed (" + game.getWrongLetters().length()/2 + ") wrong letters:"
                     + game.getWrongLetters());
+            System.out.println("You still have: " + game.getChancesLeft() + " chances left.");
             game.guessALetter();
         }
         if(game.Victory()){
